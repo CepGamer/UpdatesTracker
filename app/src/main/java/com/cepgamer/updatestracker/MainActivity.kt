@@ -1,6 +1,9 @@
 package com.cepgamer.updatestracker
 
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.cepgamer.updatestracker.model.UpdateTrackerDatabase
@@ -22,5 +25,11 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, HtmlPageFragment.newInstance(vm))
                 .commitNow()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {}.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        getSystemService(NotificationManager::class.java).cancelAll()
     }
 }

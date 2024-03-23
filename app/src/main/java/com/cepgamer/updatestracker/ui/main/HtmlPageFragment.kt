@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout.VERTICAL
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.cepgamer.updatestracker.DefaultHtmlPageRecyclerViewAdapter
 import com.cepgamer.updatestracker.databinding.HtmlPageFragmentItemListBinding
 import com.cepgamer.updatestracker.model.RawHtmlUpdater
@@ -49,7 +50,18 @@ class HtmlPageFragment(viewModelLazy: Lazy<RawHtmlViewModel>) : Fragment() {
                     // Set the adapter
                     with(binding.htmlList) {
                         layoutManager = LinearLayoutManager(context)
-                        adapter = DefaultHtmlPageRecyclerViewAdapter(list)
+                        adapter = DefaultHtmlPageRecyclerViewAdapter(list) { address ->
+                            OnLongClickListener {
+                                AlertDialog.Builder(it.context)
+                                    .setTitle("Are you sure you want to delete this entry?")
+                                    .setPositiveButton(android.R.string.yes) { _, _ ->
+                                        updater.deleteHtml(address)
+                                    }
+                                    .show()
+
+                                true
+                            }
+                        }
                         addItemDecoration(DividerItemDecoration(context, VERTICAL))
                     }
                 }

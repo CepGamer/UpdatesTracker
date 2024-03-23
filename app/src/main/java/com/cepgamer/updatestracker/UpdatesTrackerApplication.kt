@@ -1,6 +1,8 @@
 package com.cepgamer.updatestracker
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -12,12 +14,19 @@ class UpdatesTrackerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val workRequest = PeriodicWorkRequestBuilder<DownloadWorker>(30.minutes.toJavaDuration())
+        val workRequest = PeriodicWorkRequestBuilder<DownloadWorker>(UPDATE_PERIOD)
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "unique_updater_work",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
             workRequest.build()
         )
+
+        val mainChannel = NotificationChannel(DownloadWorker.NOTIFICATION_ID.toString(), "WebsiteUpdates", NotificationManager.IMPORTANCE_HIGH)
+        getSystemService(NotificationManager::class.java).createNotificationChannel(mainChannel)
+    }
+
+    companion object {
+        val UPDATE_PERIOD = 1.minutes.toJavaDuration()
     }
 }
