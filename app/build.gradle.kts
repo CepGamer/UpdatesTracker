@@ -52,7 +52,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.work:work-runtime-ktx:2.8.0")

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">UpdatesTracker</string>
     <string name="add_to_tracker_text">Add to tracker</string>
-    <string name="address_suggestion_text">Address</string>
+    <string name="address_suggestion_text">https://google.com</string>
 </resources>

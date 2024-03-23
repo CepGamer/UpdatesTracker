@@ -2,6 +2,7 @@ package com.cepgamer.updatestracker.background
 
 import android.app.Notification
 import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -20,7 +21,7 @@ class DownloadWorker(private val appContext: Context, workerParams: WorkerParame
 
         if (result.isNotEmpty()) {
             addresses += result.map(RawHtmlEntity::address)
-
+            Log.i(javaClass.name, "Adding notification.")
             setForeground(getForegroundInfo())
         }
 
@@ -36,6 +37,7 @@ class DownloadWorker(private val appContext: Context, workerParams: WorkerParame
             .setContentTitle("Update to the list of addresses")
             .setContentText("Addresses updated: ${addresses.joinToString(", ")}")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSmallIcon(androidx.appcompat.R.drawable.abc_ic_arrow_drop_right_black_24dp)
             .build()
     }
 

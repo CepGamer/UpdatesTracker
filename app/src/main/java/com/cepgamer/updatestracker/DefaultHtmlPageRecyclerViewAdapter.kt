@@ -1,20 +1,15 @@
 package com.cepgamer.updatestracker
 
-import androidx.recyclerview.widget.RecyclerView
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-
-import com.cepgamer.updatestracker.placeholder.PlaceholderContent.PlaceholderItem
+import androidx.recyclerview.widget.RecyclerView
 import com.cepgamer.updatestracker.databinding.HtmlPageFragmentItemBinding
 import com.cepgamer.updatestracker.model.RawHtmlEntity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.toList
 import java.time.ZoneId
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class DefaultHtmlPageRecyclerViewAdapter(
     private val values: List<RawHtmlEntity>
 ) : RecyclerView.Adapter<DefaultHtmlPageRecyclerViewAdapter.ViewHolder>() {
@@ -27,10 +22,10 @@ class DefaultHtmlPageRecyclerViewAdapter(
                 false
             )
         )
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.i(javaClass.name, "ViewHolder bound: $position")
         val rawHtml = values[position]
         holder.apply {
             addressTextView.text = rawHtml.address
@@ -38,10 +33,23 @@ class DefaultHtmlPageRecyclerViewAdapter(
                 rawHtml.lastUpdate.atZone(ZoneId.systemDefault()).toLocalTime().toString()
             lastCheckedTextView.text =
                 rawHtml.lastCheck.atZone(ZoneId.systemDefault()).toLocalTime().toString()
+
+            itemView.setOnClickListener {
+                itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(rawHtml.address)))
+            }
+
+//            itemView.setOnLongClickListener {
+//                AlertDialog.Builder(it.context).setTitle("Are you sure you want to delete this entry?").setPositiveButton(android.R.string.yes, {
+//
+//                })
+//            }
         }
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int {
+        Log.i(javaClass.name, "Size requested: ${values.size}")
+        return values.size
+    }
 
     inner class ViewHolder(binding: HtmlPageFragmentItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

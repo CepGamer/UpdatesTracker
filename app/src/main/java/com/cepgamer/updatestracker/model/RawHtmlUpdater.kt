@@ -27,9 +27,8 @@ class RawHtmlUpdater(appContext: Context) {
         val currentTime = Instant.now()
         val addressOnlyEntity = RawHtmlEntity(address, "", currentTime, currentTime)
 
-        rawHtmlDao.upsertHtmls(addressOnlyEntity)
-
         runBlocking(Dispatchers.IO) {
+            rawHtmlDao.upsertHtmls(addressOnlyEntity)
             updateHtml(addressOnlyEntity)
             rawHtmlDao.upsertHtmls(addressOnlyEntity)
         }
@@ -37,8 +36,14 @@ class RawHtmlUpdater(appContext: Context) {
 
     private suspend fun updateHtml(entity: RawHtmlEntity): Pair<Boolean, RawHtmlEntity> {
         val raw = withContext(Dispatchers.IO) {
-            BufferedInputStream(URL(entity.address).openConnection().getInputStream()).readBytes()
+            try {
+            return@withContext BufferedInputStream(URL(entity.address).openConnection().getInputStream()).readBytes()
                 .toString(Charsets.UTF_8)
+                } catch (e: Throwable) {
+                    println(e)
+                }
+
+            return@withContext ""
         }
 
         val currentTime = Instant.now()
