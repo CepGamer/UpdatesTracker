@@ -32,9 +32,9 @@ class DefaultHtmlPageRecyclerViewAdapter(
         holder.apply {
             addressTextView.text = rawHtml.address
             lastUpdatedTextView.text =
-                rawHtml.lastUpdate.atZone(ZoneId.systemDefault()).toLocalTime().toString()
+                rawHtml.lastUpdate.atZone(ZoneId.systemDefault()).toLocalDateTime().toString()
             lastCheckedTextView.text =
-                rawHtml.lastCheck.atZone(ZoneId.systemDefault()).toLocalTime().toString()
+                rawHtml.lastCheck.atZone(ZoneId.systemDefault()).toLocalDateTime().toString()
 
             itemView.setOnClickListener {
                 itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(rawHtml.address)))

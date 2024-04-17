@@ -22,7 +22,9 @@ class UpdatesTrackerApplication : Application() {
             workRequest.build()
         )
 
-        val mainChannel = NotificationChannel(DownloadWorker.NOTIFICATION_ID.toString(), "WebsiteUpdates", NotificationManager.IMPORTANCE_HIGH)
+        val mainChannel = NotificationChannel(DownloadWorker.NOTIFICATION_ID.toString(), "WebsiteUpdates", NotificationManager.IMPORTANCE_HIGH).apply {
+            description = "Main channel for website updates"
+        }
         getSystemService(NotificationManager::class.java).createNotificationChannel(mainChannel)
     }
 

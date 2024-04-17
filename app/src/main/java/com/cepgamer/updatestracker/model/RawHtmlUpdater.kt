@@ -55,9 +55,13 @@ class RawHtmlUpdater(appContext: Context) {
             return@withContext ""
         }.replace("\\s".toRegex(), "")
             .replace("""(</\w+>)""".toRegex(), "\$1\n")
-            .replace("""(<\w+>)""".toRegex(), "\n\$1").split("\n")
+            .replace("""(<\w+>)""".toRegex(), "\n\$1")
+            .split("\n")
             .filter { line -> !line.contains(filteredRegex) }
+            .filter { line -> !line.matches("</?\\w+>".toRegex()) }
             .joinToString("\n")
+
+        Log.d(javaClass.name, raw)
 
         if (raw.isBlank()) {
             return false to RawHtmlEntity("", "", Instant.now(), Instant.now())
@@ -68,12 +72,12 @@ class RawHtmlUpdater(appContext: Context) {
         val newEntity = RawHtmlEntity(
             entity.address,
             raw,
-            currentTime,
             if (isUpdated) currentTime else entity.lastUpdate,
+            currentTime,
         )
 
         if (isUpdated) {
-            Log.i(javaClass.name, "Diff is: ${getDiff(entity.htmlValue, raw)}")
+            Log.i(javaClass.name, "Updated the website")
         }
 
         return isUpdated to newEntity

@@ -26,12 +26,28 @@ class DownloadWorker(private val appContext: Context, workerParams: WorkerParame
     override suspend fun doWork(): Result {
         val result = updater.updateHtmls()
 
+        Log.i(this::class.simpleName, "Worker iteration")
+
         if (result.isNotEmpty()) {
+            Log.i(this::class.simpleName, "Address update. Showing notification.")
             addresses += result.map(RawHtmlEntity::address)
-            Log.i(javaClass.name, "Adding notification.")
+            if (ActivityCompat.checkSelfPermission(
+                    this.appContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Log.i(this::class.simpleName, "Can't show notifications.")
+            }
+
             NotificationManagerCompat.from(applicationContext)
                 .notify(NOTIFICATION_ID, createNotification())
-            setForeground(getForegroundInfo())
         }
 
         return Result.success()
@@ -45,7 +61,8 @@ class DownloadWorker(private val appContext: Context, workerParams: WorkerParame
         return NotificationCompat.Builder(appContext, NOTIFICATION_ID.toString())
             .setContentTitle("Update to the list of addresses")
             .setContentText("Addresses updated: ${addresses.joinToString(", ")}")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setChannelId(NOTIFICATION_ID.toString())
             .setContentIntent(
                 PendingIntent.getActivity(
                     appContext,
@@ -63,6 +80,6 @@ class DownloadWorker(private val appContext: Context, workerParams: WorkerParame
     companion object {
         val ADDRESS_TAG = "address"
 
-        val NOTIFICATION_ID = 115
+        const val NOTIFICATION_ID = 115
     }
 }
