@@ -76,6 +76,15 @@ class HtmlPageFragment(viewModelLazy: Lazy<RawHtmlViewModel>) : Fragment() {
             startAddressMonitoring(binding.htmlAddressEditText.text.toString())
         }
 
+        binding.refreshCircle.setOnRefreshListener {
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    updater.updateHtmls()
+                }
+                binding.refreshCircle.isRefreshing = false
+            }
+        }
+
         return view
     }
 

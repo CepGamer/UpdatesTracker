@@ -1,6 +1,7 @@
 package com.cepgamer.updatestracker.model
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -8,7 +9,8 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import java.time.Instant
 
-@Database(entities = [RawHtmlEntity::class], version = 1)
+@Database(entities = [RawHtmlEntity::class], version = 2,
+    autoMigrations = [AutoMigration (from = 1, to = 2)])
 @TypeConverters(UpdateTrackerDatabase.InstantConverter::class)
 abstract class UpdateTrackerDatabase : RoomDatabase() {
     abstract fun htmlDao(): RawHtmlDao

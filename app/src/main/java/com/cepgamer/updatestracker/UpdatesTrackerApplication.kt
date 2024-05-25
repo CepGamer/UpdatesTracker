@@ -29,6 +29,6 @@ class UpdatesTrackerApplication : Application() {
     }
 
     companion object {
-        val UPDATE_PERIOD = 1.minutes.toJavaDuration()
+        val UPDATE_PERIOD = 15.minutes.toJavaDuration()
     }
 }

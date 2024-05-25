@@ -16,17 +16,16 @@ class RawHtmlUpdater(appContext: Context) {
 
     /** updates HTMLs and returns list of updated ones. */
     suspend fun updateHtmls(): List<RawHtmlEntity> {
-        val results = rawHtmlDao.getAll().map { updateHtml(it) }
+        val results = rawHtmlDao.getAll().mapNotNull { updateHtml(it) }
 
-        results.map(Pair<Boolean, RawHtmlEntity>::second).forEach(rawHtmlDao::upsertHtmls)
+        results.forEach(rawHtmlDao::upsertHtmls)
 
-        return results.filter(Pair<Boolean, RawHtmlEntity>::first)
-            .map(Pair<Boolean, RawHtmlEntity>::second)
+        return results
     }
 
     fun insertHtmlByAddress(address: String) {
         val currentTime = Instant.now()
-        val addressOnlyEntity = RawHtmlEntity(address, "", currentTime, currentTime)
+        val addressOnlyEntity = RawHtmlEntity(address, "", currentTime, currentTime, address, -1)
 
         runBlocking(Dispatchers.IO) {
             rawHtmlDao.upsertHtmls(addressOnlyEntity)
@@ -41,7 +40,7 @@ class RawHtmlUpdater(appContext: Context) {
         }
     }
 
-    private suspend fun updateHtml(entity: RawHtmlEntity): Pair<Boolean, RawHtmlEntity> {
+    private suspend fun updateHtml(entity: RawHtmlEntity): RawHtmlEntity? {
         val raw = withContext(Dispatchers.IO) {
             try {
                 return@withContext BufferedInputStream(
@@ -59,12 +58,13 @@ class RawHtmlUpdater(appContext: Context) {
             .split("\n")
             .filter { line -> !line.contains(filteredRegex) }
             .filter { line -> !line.matches("</?\\w+>".toRegex()) }
+            .filter { line -> line.isNotBlank() }
             .joinToString("\n")
 
         Log.d(javaClass.name, raw)
 
         if (raw.isBlank()) {
-            return false to RawHtmlEntity("", "", Instant.now(), Instant.now())
+            return null
         }
 
         val currentTime = Instant.now()
@@ -74,13 +74,15 @@ class RawHtmlUpdater(appContext: Context) {
             raw,
             if (isUpdated) currentTime else entity.lastUpdate,
             currentTime,
+            entity.title,
+            entity.uiPosition
         )
 
         if (isUpdated) {
             Log.i(javaClass.name, "Updated the website")
         }
 
-        return isUpdated to newEntity
+        return newEntity
     }
 
     companion object {

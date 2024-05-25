@@ -25,6 +25,10 @@
             android:text="@string/add_to_tracker_text" />
     </LinearLayout>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/refresh_circle">
     <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/html_list"
@@ -35,4 +39,6 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.main.HtmlPageFragment"
-    tools:listitem="@layout/html_page_fragment_item" /></LinearLayout>
+    tools:listitem="@layout/html_page_fragment_item" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>
