@@ -4,4 +4,8 @@
     <string name="address_suggestion_text">https://google.com</string>
     <string name="last_checked">Last checked:</string>
     <string name="last_updated">Last updated:</string>
+    <string name="edit_entry_button_text">Edit entry</string>
+    <string name="edit_title_text">Edit entry title</string>
+    <string name="delete_text">Delete entry</string>
+    <string name="change_position">Change entry position</string>
 </resources>

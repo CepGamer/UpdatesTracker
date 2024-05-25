@@ -28,19 +28,19 @@ class DefaultHtmlPageRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.i(javaClass.name, "ViewHolder bound: $position")
-        val rawHtml = values[position]
+        val appEntry = values[position]
         holder.apply {
-            addressTextView.text = rawHtml.address
+            addressTextView.text = appEntry.address
             lastUpdatedTextView.text =
-                rawHtml.lastUpdate.atZone(ZoneId.systemDefault()).toLocalDateTime().toString()
+                appEntry.lastUpdate.atZone(ZoneId.systemDefault()).toLocalDateTime().toString()
             lastCheckedTextView.text =
-                rawHtml.lastCheck.atZone(ZoneId.systemDefault()).toLocalDateTime().toString()
+                appEntry.lastCheck.atZone(ZoneId.systemDefault()).toLocalDateTime().toString()
 
             itemView.setOnClickListener {
-                itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(rawHtml.address)))
+                itemView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(appEntry.address)))
             }
 
-            itemView.setOnLongClickListener(onLongClickListener(rawHtml.address))
+            itemView.setOnLongClickListener(onLongClickListener(appEntry.address))
         }
     }
 

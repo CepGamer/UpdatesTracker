@@ -54,4 +54,14 @@
         app:layout_constraintTop_toTopOf="@id/last_updated_text"
         app:layout_constraintStart_toEndOf="@id/last_updated_text" />
 
+    <ImageButton
+        android:id="@+id/edit_entry_button"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/edit_entry_button_text"
+        android:src="@android:drawable/ic_menu_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
