@@ -8,4 +8,6 @@
     <string name="edit_title_text">Edit entry title</string>
     <string name="delete_text">Delete entry</string>
     <string name="change_position">Change entry position</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

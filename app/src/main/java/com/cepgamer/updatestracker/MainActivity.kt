@@ -1,6 +1,7 @@
 package com.cepgamer.updatestracker
 
 import android.app.NotificationManager
+import android.app.UiModeManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        applyDayNightMode()
 
         val dao = UpdateTrackerDatabase.getDatabase(application).htmlDao()
 
@@ -31,5 +34,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         getSystemService(NotificationManager::class.java).cancelAll()
+    }
+
+    private fun applyDayNightMode() {
+        val manager = getSystemService(UiModeManager::class.java)
+        delegate.localNightMode = manager.nightMode
     }
 }
