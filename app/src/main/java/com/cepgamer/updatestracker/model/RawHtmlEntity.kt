@@ -11,6 +11,6 @@ data class RawHtmlEntity(
     @ColumnInfo val htmlValue: String,
     @ColumnInfo val lastUpdate: Instant,
     @ColumnInfo val lastCheck: Instant,
-    @ColumnInfo val title: String,
-    @ColumnInfo val uiPosition: Int,
+    @ColumnInfo(defaultValue = "") val title: String,
+    @ColumnInfo(defaultValue = "-1") val uiPosition: Int,
 )
